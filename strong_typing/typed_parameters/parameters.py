@@ -20,6 +20,28 @@ def snakecase(s):
 # ──────────────────────────── Type classes ────────────────────────────────── #
 
 class ParameterType(object):
+	"""
+	Base type for parameters
+
+	:param name: Name of the parameter
+	:param description: Description of the parameter
+	:param default: Default value
+	:param id: Token used to access the parameter
+
+	If ``default`` is ``None``, it means the parameter is optional and
+	can have ``None`` as a value. Otherwise, setting the parameter to
+	``None`` actually resets it to the default value.
+
+	If ``id`` is ``None``, it will by default be the name of the
+	parameter turned into a snakecase string. Otherwise, the only
+	requirement is for the id to be a snakecase string (it doesn't have
+	to be related to the parameter's name)
+
+	:Example:
+		If name is 'My Parameter', then id will be 'my_parameter',
+		and its value will be accessible by calling
+		<owning_class>.my_parameter
+	"""
 	def __init__(self, name, description, default, id = None):
 		self.name = name
 		self.description = description
@@ -44,37 +66,69 @@ class ParameterType(object):
 		else:
 			raise NotImplementedError
 
-class NumeralParameter(ParameterType):
+class NumericParameter(ParameterType):
+	"""
+	Base type for numeric parameters
+
+	:param normalizer: Extra-verification function
+	:param range: Couple of values representing the lowest and
+	              highest possible values the parameter can take
+	              It is possible to define only one of the two and
+	              leave the other to None to have only a minimum or
+	              only a maximum
+
+	``normalizer`` is a user-defined function allowing him to perform
+	an extra-verification on the inserted value. For instance, a function
+	can be added to accept only odd numbers, or perfect square number. In
+	case the inserted value does not match the requirement, the function
+	must provide a valid value instead of the inserted one.
+	"""
 	def __init__(self, name, description, default, normalizer,
 	                   range=(None,None), id = None):
 		ParameterType.__init__(self, name, description, default, id)
 		self.default = default
-		self.range   = range
+		f = lambda x: None if x is None else normalizer(x)
+		self.range   = tuple(map(f, range))
 
 		def _normalizer(x):
 			if x is None:
 				return None
 			x = normalizer(x)
-			if not range[0] is None and x < range[0]:
-				x = range[0]
-			if not range[1] is None and x > range[1]:
-				x = range[1]
-			x = normalizer(x) # just in case range is not in the good type...
+			if not self.range[0] is None and x < self.range[0]:
+				x = self.range[0]
+			if not self.range[1] is None and x > self.range[1]:
+				x = self.range[1]
 			return x
 
 		self._normalizer = _normalizer
 
-class IntegerParameter(NumeralParameter):
-	def __init__(self, name="", description="", default=0, range=(None,None),
-		               normalizer=int, id = None):
-		NumeralParameter.__init__(self, name, description, default,
-		                                normalizer, range, id)
+class IntegerParameter(NumericParameter):
+	"""
+	Integer parameter
+	"""
+	def __init__(self, name="", description="", default=0,
+		               normalizer=None, range=(None,None),
+		               id = None):
+		if normalizer is not None:
+			_normalizer = lambda x:int(normalizer(int(x)))
+		else:
+			_normalizer = int
+		NumericParameter.__init__(self, name, description, default,
+		                                _normalizer, range, id)
 
-class FloatParameter(NumeralParameter):
-	def __init__(self, name="", description="", default=0.0, range=(None,None),
-		               normalizer=float, id = None):
-		NumeralParameter.__init__(self, name, description, default,
-		                                normalizer, range, id)
+class FloatParameter(NumericParameter):
+	"""
+	Float parameter
+	"""
+	def __init__(self, name="", description="", default=0.0,
+		               normalizer=None, range=(None,None),
+		               id = None):
+		if normalizer is not None:
+			_normalizer = lambda x:float(normalizer(float(x)))
+		else:
+			_normalizer = float
+		NumericParameter.__init__(self, name, description, default,
+		                                _normalizer, range, id)
 
 class BoolParameter(ParameterType):
 	def __init__(self, name="", description="", default=False, id = None):
@@ -94,6 +148,15 @@ class BoolParameter(ParameterType):
 		self._normalizer = normalizer
 
 class EnumParameter(ParameterType):
+	"""
+	Parameter describing a set of choices
+
+	:param choices: Set of possible choices. It can be a list of strings, or an
+	enum.Enum
+	:param default: Default value
+	If ``default`` is ``None``, the first of the available choices is selected as
+	default.
+	"""
 	class EnumFromList(enum.Enum):
 		def __eq__(self, other):
 			if isinstance(other, str):
@@ -156,6 +219,11 @@ class StringParameter(ParameterType):
 		self._normalizer = normalizer
 
 class VectorParameter(ParameterType):
+	"""
+	Handles list
+
+	:param type: Type of the elements stored in the list
+	"""
 	def __init__(self, type, name="", description="", default=None, id = None):
 		default = list(default) if default is not None else list()
 		ParameterType.__init__(self, name, description, default, id)
@@ -166,6 +234,11 @@ class VectorParameter(ParameterType):
 		self._normalizer = normalizer
 
 class StructParameter(ParameterType):
+	"""
+	Handles a Struct
+
+	:param type: Type of the Struct to be used
+	"""
 	def __init__(self, type, default=None, name="", description="", id = None):
 		default = type(default) if isinstance(default, type) else type()
 		ParameterType.__init__(self, name, description, default, id)

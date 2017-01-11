@@ -2,7 +2,7 @@
 
 import os
 
-__doc__ = open(os.path.join(os.path.dirname(os.path.realpath(__file__)),'../README.md')).read()
+__doc__ = open(os.path.join(os.path.dirname(os.path.realpath(__file__)),'../README.rst')).read()
 
 import typed_parameters
 import typed_containers

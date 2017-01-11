@@ -11,13 +11,13 @@ from strong_typing import Struct
 from strong_typing.typed_containers import TypedList
 from strong_typing.typed_parameters import *
 
-class TypeCheckingNumeralTest(unittest.TestCase):
+class TypeCheckingNumericTest(unittest.TestCase):
 
 	def setUp(self):
 		class TestStruct(Struct):
 			__ATTRIBUTES__= [
 				IntegerParameter(name="int"),
-				IntegerParameter(name="ranged_int", range=[0,10]),
+				IntegerParameter(name="ranged_int", range=["0","10"]),
 				IntegerParameter(name="odd_int", normalizer=ODD_NORMALIZER),
 				IntegerParameter(name="optional_int", default=None),
 				FloatParameter(name="float"),
