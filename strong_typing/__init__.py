@@ -1,20 +1,29 @@
 # -*- coding: utf-8 -*-
 
-import os
+def load_doc():
+	import os
+	return open(os.path.join(os.path.dirname(os.path.realpath(__file__)),'../README.rst')).read()
 
-__doc__ = open(os.path.join(os.path.dirname(os.path.realpath(__file__)),'../README.rst')).read()
+def test_pyside_presence():
+	try:
+		import PySide
+		return True
+	except ImportError:
+		return False
+
+__doc__ = load_doc()
 
 import typed_parameters
 import typed_containers
 
-try:
-	import PySide
-except ImportError:
-	pass
-else:
-	from display_widget import ObjectDisplayWidget
+from _struct import *
+from _versioned_struct import *
 
-from struct import Struct
-from versioned_struct import VersionedStruct
+if test_pyside_presence():
+	from _display_widget import *
+
+# Remove symbols that must not be exported
+del load_doc
+del test_pyside_presence
 
 #––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––#

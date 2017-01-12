@@ -233,6 +233,16 @@ class VectorParameter(ParameterType):
 
 		self._normalizer = normalizer
 
+# class Map(ParameterType):
+# 	def __init__(self, key_type, value_type, name="", description="", default=None, id = None):
+# 		default = default if default is not None else dict()
+# 		ParameterType.__init__(self, name, description, default, id)
+
+# 		def normalizer(x):
+# 			return TypedList(type, x)
+
+# 		self._normalizer = normalizer
+
 class StructParameter(ParameterType):
 	"""
 	Handles a Struct
@@ -247,3 +257,15 @@ class StructParameter(ParameterType):
 			return type(x)
 
 		self._normalizer = normalizer
+
+__all__ = ["IntegerParameter",
+           "FloatParameter",
+           # LongParameter,
+           "BoolParameter",
+           "StringParameter",
+           # BufferParameter, ??
+           # FileParameter, ??
+           "EnumParameter",
+           "VectorParameter",
+           # MapParameter,
+           "StructParameter"]

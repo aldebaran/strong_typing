@@ -53,3 +53,5 @@ class TextualizedDict(OrderedDict):
 		else:
 			# res_str = ""
 			return textualize(self.keys(), self, unicode)
+
+__all__=["TextualizedList", "TextualizedDict"]

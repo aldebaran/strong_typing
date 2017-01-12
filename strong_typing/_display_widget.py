@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 
-# Standard libraries
-import math
-
 # Third-party libraries
-from PySide.QtCore import Qt
-from PySide.QtGui import QTreeWidget, QTreeWidgetItem, QLineEdit, QPushButton, QSizePolicy, QComboBox, QPalette
+from PySide import QtGui
+from PySide import QtCore
 import enum
 
 # strong_typing
-from struct import Struct
+from _struct import Struct
 from typed_containers import TypedList
 
-class ObjectDisplayWidget(QTreeWidget):
+class ObjectDisplayWidget(QtGui.QTreeWidget):
 	"""
 	Tree widget displaying an object and giving the possibility to
 	modify it.
@@ -30,7 +27,7 @@ class ObjectDisplayWidget(QTreeWidget):
 		super(ObjectDisplayWidget, self).__init__(parent)
 
 		# Take as much space as possible
-		self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+		self.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
 
 		# Three columns (key, value, delete button)
 		self.setColumnCount(3)
@@ -91,7 +88,6 @@ class ObjectDisplayWidget(QTreeWidget):
 		                        obj= self.data)
 
 	def _display_sub_items(self, parent_item, parent_obj, key, obj):
-
 		# Value to display at this level (if obj is not a container)
 		value = None
 
@@ -130,7 +126,7 @@ class ObjectDisplayWidget(QTreeWidget):
 
 		## Create item
 		if key != '':
-			item = QTreeWidgetItem()
+			item = QtGui.QTreeWidgetItem()
 
 			if parent_item is None:
 				# This obj is a child of the root object
@@ -150,7 +146,7 @@ class ObjectDisplayWidget(QTreeWidget):
 				if isinstance(obj, enum.Enum):
 					# Enum is a limited set of choice
 					# Display a ComboBox
-					inputWidget = QComboBox(self)
+					inputWidget = QtGui.QComboBox(self)
 					for element in list(type(obj)):
 						inputWidget.addItem(element.name)
 						if element.name == value:
@@ -162,15 +158,15 @@ class ObjectDisplayWidget(QTreeWidget):
 				else:
 					# Other types are manually editable
 					# Display a LineEdit
-					inputWidget = QLineEdit(self)
+					inputWidget = QtGui.QLineEdit(self)
 					inputWidget.setText(value)
 					inputWidget.editingFinished.connect(lambda: self._refreshTextItem(parent_obj, item, key))
 					## TODO ?? Use a QValidator to prevent Exceptions ?
 
 			elif isinstance(obj, TypedList):
 				# obj is a list, add a button to add elements
-				inputWidget = QPushButton(self)
-				inputWidget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+				inputWidget = QtGui.QPushButton(self)
+				inputWidget.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
 				inputWidget.setText("Add element")
 				inputWidget.clicked.connect(lambda: self._elementAdditionRequired(item, obj))
 
@@ -188,8 +184,8 @@ class ObjectDisplayWidget(QTreeWidget):
 			# Third column
 			if isinstance(parent_obj, TypedList):
 				# obj is an element of a container that supports removal
-				inputWidget = QPushButton(self)
-				inputWidget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+				inputWidget = QtGui.QPushButton(self)
+				inputWidget.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
 				inputWidget.setText("Remove element")
 				inputWidget.clicked.connect(lambda: self._elementDeletionRequired(parent_item, parent_obj, item, key))
 				self.setItemWidget(item, 2, inputWidget)
@@ -223,9 +219,9 @@ class ObjectDisplayWidget(QTreeWidget):
 				new_value = str(getattr(parent_obj, key)) if getattr(parent_obj, key) is not None else ""
 			line_edit.setText(new_value)
 		except ValueError:
-			pal.setColor(QPalette.Text, Qt.red)
+			pal.setColor(QtGui.QPalette.Text, QtCore.Qt.red)
 		else:
-			pal.setColor(QPalette.Text, self.palette().color(QPalette.Text))
+			pal.setColor(QtGui.QPalette.Text, self.palette().color(QtGui.QPalette.Text))
 		line_edit.setPalette(pal)
 
 	def _elementAdditionRequired(self, item, obj):
@@ -242,3 +238,5 @@ class ObjectDisplayWidget(QTreeWidget):
 		parent_obj.pop(key) # Remove object from the container
 		for (key, obj) in enumerate(parent_obj):
 			self._display_sub_items(parent_item, parent_obj, key, obj)
+
+__all__=["ObjectDisplayWidget"]

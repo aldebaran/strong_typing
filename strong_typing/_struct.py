@@ -4,7 +4,7 @@
 from copy import deepcopy
 
 # strong_typing
-from textualize import TextualizedDict
+from _textualize import TextualizedDict
 
 class StructMeta(type):
 
@@ -136,3 +136,5 @@ class Struct(object):
 
 	def __unicode__(self):
 		return unicode(self.toDict())
+
+__all__=["Struct"]

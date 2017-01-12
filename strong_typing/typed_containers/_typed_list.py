@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 # strong_typing
-from ..textualize import TextualizedList
-from ..struct import Struct
+from .._textualize import TextualizedList
+from .._struct import Struct
 
 # class TypedList(type):
 
@@ -100,3 +100,5 @@ class TypedList(TextualizedList):
 
         # return DefinedTypedList
         # return type('TypedList_'+typename.__name__, (DefinedTypedList,), dict())
+
+__all__ = ["TypedList"]

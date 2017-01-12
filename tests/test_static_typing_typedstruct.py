@@ -6,6 +6,7 @@ import unittest
 # strong_typing
 from strong_typing import Struct
 from strong_typing.typed_parameters import *
+from strong_typing.typed_parameters.normalizers import *
 
 class StructCreationTest(unittest.TestCase):
 

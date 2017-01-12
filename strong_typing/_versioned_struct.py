@@ -2,9 +2,8 @@
 
 # Standard library
 from distutils.version import StrictVersion
-from copy import deepcopy
 
-from struct import StructMeta, Struct
+from _struct import StructMeta, Struct
 
 class VersionedStructMeta(StructMeta):
 
@@ -74,3 +73,5 @@ class VersionedStruct(Struct):
 	@property
 	def version(self):
 		return StrictVersion(self.__VERSION__)
+
+__all__=["VersionedStruct"]

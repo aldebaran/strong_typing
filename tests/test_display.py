@@ -15,6 +15,7 @@ except:
 from strong_typing import ObjectDisplayWidget
 from strong_typing import Struct
 from strong_typing.typed_parameters import *
+from strong_typing.typed_parameters.normalizers import *
 
 class InnerTestStruct(Struct):
 	__ATTRIBUTES__= [
