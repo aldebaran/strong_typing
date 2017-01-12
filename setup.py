@@ -20,5 +20,7 @@ setup(
     description='Classes to create strongly typed structures in Python',
     long_description=open(os.path.join(CONTAINING_DIRECTORY,'README.rst')).read(),
     test_suite="tests",
-    install_requires=[]
+    install_requires=[
+        "enum34 >= 1.0.4"
+    ]
 )
