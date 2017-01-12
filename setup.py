@@ -6,7 +6,7 @@ import os
 
 CONTAINING_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 
-package_list = find_packages(where=CONTAINING_DIRECTORY, exclude=(), include=())
+package_list = find_packages(where=CONTAINING_DIRECTORY)
 
 setup(
     name='strong-typing-py',
