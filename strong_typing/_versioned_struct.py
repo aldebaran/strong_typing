@@ -8,45 +8,29 @@ from _struct import StructMeta, Struct
 class VersionedStructMeta(StructMeta):
 
 	def __init__(cls, name, bases, attrs, **kwargs):
-		docu = """
-		%s (current version: %s):
-
-		Description: %s
-
-		:Parameters:
-
-		"""%(name, cls.__VERSION__, cls.__DESCRIPTION__)
+		docu = "%s (current version: %s):\n\n"%(name, cls.__VERSION__)
+		docu += "Description: %s\n\n"%cls.__DESCRIPTION__
+		docu += ":Parameters:\n\n"
 		for parameter, version in zip(cls.__ATTRIBUTES__,cls.__ATT_VERSIONS__):
-			docu += """
-			``%s`` %s
+			docu += "\t``%s`` %s\n\n"%(parameter.id, "" if version is None else "(appeared in version %s)"%version)
+			docu += "\t\t%s\n\n"%parameter.description
+			default_string = "``" if not isinstance(parameter.default, Struct) else ":class:`"+type(parameter.default).__name__+"`"
+			default_string += unicode(parameter.default).replace("\n","\n\n\t\t\t") if parameter.default != "" else "\"\""
+			default_string += "``" if not isinstance(parameter.default, Struct) else ""
+			docu += "\t\tDefault: %s\n\n"%default_string
 
-				%s
+		if len(cls.__DEPRECATED_ATT_N_VERSIONS__) == 0:
+			cls.__doc__ = docu
+			return
 
-				Default: %s
-
-			"""%(parameter.id,\
-			     "" if version is None else "(appeared in version %s)"%version,\
-			     parameter.description,\
-			     str(parameter.default) if parameter.default != "" else "\"\"")
-
-		docu+="""
-
-		:Deprecated parameters:
-
-		"""
+		docu+=":Deprecated parameters:\n\n"
 		for parameter, first_version, last_version in cls.__DEPRECATED_ATT_N_VERSIONS__:
-			docu += """
-			``%s``%s%s
-
-				%s
-
-				Default: %s
-
-			"""%(parameter.id,\
-			     "" if first_version is None else " (appeared in version %s)"%version,\
-			     " (deprecated since version %s)"%last_version,\
-			     parameter.description,\
-			     str(parameter.default) if parameter.default != "" else "\"\"")
+			docu += "\t``%s`` %s%s\n\n"%(parameter.id,\
+			                             "" if first_version is None else " (appeared in version %s)"%version,\
+			                             " (deprecated since version %s)"%last_version)
+			docu += "\t\t%s\n\n"%parameter.description
+			default_string = unicode(parameter.default).replace("\n","\n\n\t\t\t") if parameter.default != "" else "\"\""
+			docu += "\t\tDefault: %s\n\n"%default_string
 		cls.__doc__ = docu
 
 	@property
