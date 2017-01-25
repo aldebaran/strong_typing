@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
 # strong_typing
-from .._textualize import TextualizedList
+from .._textualize import TextualizeMixin
 from .._struct import Struct
 
 # class TypedList(type):
 
 #     def __new__(mcs, typename):
 
-class TypedList(TextualizedList):
+class TypedList(list, TextualizeMixin):
     """
     Contains a list of statically-typed objects.
     """

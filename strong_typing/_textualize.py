@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Standard libraries
-from collections import OrderedDict
+import collections
 
 # ─────────────────────
 # Formatting parameters
@@ -28,31 +28,30 @@ def textualize(keys, map, display_type):
 		res_str += display_type(value).replace("\n","\n"+(indent_level))
 	return res_str
 
-class TextualizedList(list):
+class TextualizeMixin(object):
+	def __getitem__(self, key):
+		raise NotImplementedError
+
+	def __len__(self):
+		raise NotImplementedError
+
 	def __str__(self):
-		if len(self) == 0:
-			return "[]"
-		else:
-			return textualize(range(len(self)), self, str)
+		return self._textualize(str)
 
 	def __unicode__(self):
-		if len(self) == 0:
-			return "[]"
-		else:
-			return textualize(range(len(self)), self, unicode)
+		return self._textualize(unicode)
 
-class TextualizedDict(OrderedDict):
-	def __str__(self):
-		if len(self.keys()) == 0:
-			return "{}"
+	def _textualize(self, display_type):
+		if isinstance(self, collections.Mapping):
+			keys = self.keys()
+			if len(keys) == 0:
+				return "{}"
+		elif isinstance(self, collections.Sequence):
+			keys = range(len(self))
+			if len(keys) == 0:
+				return "[]"
 		else:
-			return textualize(self.keys(), self, str)
+			raise Exception("Only collections.{Sequence,Mapping} are supported")
+		return textualize(keys, self, display_type)
 
-	def __unicode__(self):
-		if len(self.keys()) == 0:
-			return "{}"
-		else:
-			# res_str = ""
-			return textualize(self.keys(), self, unicode)
-
-__all__=["TextualizedList", "TextualizedDict"]
+__all__=["TextualizeMixin"]
