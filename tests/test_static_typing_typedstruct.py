@@ -28,7 +28,15 @@ class StructCreationTest(unittest.TestCase):
 		with self.assertRaises(TypeError):
 			AStruct(0, 1)
 		with self.assertRaises(TypeError):
-			AStruct(b=0)
+			a = AStruct(b=0)
+
+		with self.assertRaises(TypeError):
+			a = AStruct()
+			a["b"] = 2
+
+		with self.assertRaises(AttributeError):
+			a = AStruct()
+			a.b = 2
 
 		assert(instanceA == instanceC)
 		assert(instanceA != instanceB)

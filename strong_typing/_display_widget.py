@@ -4,6 +4,7 @@
 from PySide import QtGui
 from PySide import QtCore
 import enum
+import collections
 
 # strong_typing
 from _struct import Struct
@@ -94,15 +95,12 @@ class ObjectDisplayWidget(QtGui.QTreeWidget):
 		# Sub-objects contained in the current object (if obj is a container)
 		subobjs = []
 
-		if isinstance(obj, Struct):
-			# obj is a class instance => retrieve its attributes to be displayed as sub-elements
-			subobjs = obj.toDict().items()
-
-		elif isinstance(obj, dict):
+		if isinstance(obj, collections.Mapping):
 			# obj is a container with keys  => retrieve its content to be displayed as sub-elements
 			subobjs = obj.items()
 
-		elif isinstance(obj, (list, tuple, set)):
+		elif isinstance(obj, (collections.Sequence,collections.Set))\
+		     and not isinstance(obj, basestring):
 			# obj is a container  without keys => retrieve its content to be displayed as sub-elements by numbers
 			# Give those sub-elements a number as name (like "[42]")
 			if len(obj) != 0:
@@ -111,7 +109,7 @@ class ObjectDisplayWidget(QtGui.QTreeWidget):
 			# obj is a plain value  => display it
 			if isinstance(obj, float):
 				value = '%.2f' % obj
-			elif isinstance(obj, (str, bool, int, long, unicode)):
+			elif isinstance(obj, (basestring, bool, int, long)):
 				value = str(obj)
 			elif isinstance(obj, enum.Enum):
 				value = obj.name

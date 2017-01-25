@@ -2,11 +2,13 @@
 
 # Standard libraries
 from copy import deepcopy
+import collections
+from abc import ABCMeta
 
 # strong_typing
-from _textualize import TextualizedDict
+from _textualize import TextualizeMixin
 
-class StructMeta(type):
+class StructMeta(ABCMeta):
 
 	def __new__(mcs, name, bases, attrs, **kwargs):
 		# Prepare __slots__
@@ -54,7 +56,7 @@ class StructMeta(type):
 
 				attrs[parameter.id] = Descriptor(parameter)
 
-		return type.__new__(mcs, name, bases, attrs)
+		return ABCMeta.__new__(mcs, name, bases, attrs)
 
 	def __init__(cls, name, bases, attrs, **kwargs):
 		docu = """
@@ -82,11 +84,11 @@ class StructMeta(type):
 	def __call__(cls, *args, **kwargs):
 		# Copy constructor
 		if len(args) == 1 and isinstance(args[0], cls):
-			kwargs = args[0].toDict()
+			kwargs = args[0]
 			args = []
 		return type.__call__(cls, *args, **kwargs)
 
-class Struct(object):
+class Struct(collections.Mapping, TextualizeMixin):
 	__metaclass__= StructMeta
 	__ATTRIBUTES__ = []
 	__DESCRIPTION__ = ""
@@ -107,11 +109,20 @@ class Struct(object):
 				msg = "__init__() got an unexpected keyword argument '%s'"%key
 				raise TypeError(msg)
 
-	def toDict(self):
-		out_dict = TextualizedDict()
+	def __getitem__(self, key):
+		return deepcopy(getattr(self, key))
+
+	def __setattr__(self, name, value):
+		if (not name in self.keys()) and (not name[1:] in self.keys()):
+			raise AttributeError("%s object has no attribute %s"%(self.__class__.__name__, name))
+		object.__setattr__(self, name, value)
+
+	def __iter__(self):
 		for attr in self.__ATTRIBUTES__:
-			out_dict[attr.id] = getattr(self, deepcopy(attr.id))
-		return out_dict
+			yield attr.id
+
+	def __len__(self):
+		return len(self.__ATTRIBUTES__)
 
 	# ─────────
 	# Operators
@@ -127,14 +138,5 @@ class Struct(object):
 
 	def __ne__(self, other):
 		return not self.__eq__(other)
-
-	# ──────────────
-	# Textualization
-
-	def __str__(self):
-		return str(self.toDict())
-
-	def __unicode__(self):
-		return unicode(self.toDict())
 
 __all__=["Struct"]
