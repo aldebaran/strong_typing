@@ -57,21 +57,6 @@ class TypedListManipulationTest(unittest.TestCase):
 			self.list[0] = "s"
 		assert(len(self.list)) == 1
 
-	def test_addition(self):
-		assert(len(self.list)) == 0
-		self.list.appendDefault()
-		self.list.extend([0,1.1])
-		self.list.insert(1,10)
-		self.list[4:] = [100, 20, "15"]
-		self.list[4] = 17
-		self.list.append("15")
-		assert(len(self.list)) == 8
-		assert(self.list == [0,10,0,1, 17, 20, 15, 15])
-		assert(self.list != 0) # not a list
-		assert(self.list != TypedList(float, [0, 10, 0, 1, 17, 20, 15, 15])) # different type
-		assert(self.list != TypedList(int, [0, 10, 0, 1, 17, 20, 15])) # different length
-		assert(self.list != TypedList(int, [0, 10, 0, 1, 17, 20, 15, 1])) # different content
-
 	def test_set_values(self):
 		self.list.appendDefault()
 		self.list[0] = "15"
