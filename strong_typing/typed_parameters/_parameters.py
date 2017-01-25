@@ -254,7 +254,7 @@ class StructParameter(ParameterType):
 		ParameterType.__init__(self, name, description, default, id)
 
 		def normalizer(x):
-			return type(x)
+			return type(**x)
 
 		self._normalizer = normalizer
 
