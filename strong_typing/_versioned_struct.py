@@ -47,7 +47,7 @@ class VersionedStruct(Struct):
 
 	@classmethod
 	def fromDict(cls, data=dict()):
-		if data.has_key("version"):
+		if "version" in data.keys():
 			version = StrictVersion(data.pop("version"))
 			if version < cls.version:
 				return cls._fromOldDict(data, version)
