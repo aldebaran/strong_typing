@@ -17,6 +17,7 @@ def textualize(keys, map, display_type):
 	res_str = ""
 	for key in keys:
 		value = map[key]
+		value = value if value != "" else "\"\""
 		if key != keys[-1]:
 			res_str += "\n" + TREE_MID_INDENT(display_type)
 			indent_level = AFTER_MID_INDENT(display_type)
