@@ -131,6 +131,8 @@ class Struct(collections.Mapping, TextualizeMixin):
 		if not isinstance(other, Struct):
 			return False
 		for attribute in self.__ATTRIBUTES__:
+			if not hasattr(other, attribute.id):
+				return False
 			if getattr(self, attribute.id) != getattr(other, attribute.id):
 				return False
 
