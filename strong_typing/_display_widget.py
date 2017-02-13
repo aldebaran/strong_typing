@@ -19,7 +19,7 @@ class ObjectDisplayWidget(QtGui.QTreeWidget):
 	# ───────────
 	# Constructor
 
-	def __init__(self, parent=None):
+	def __init__(self, parent=None, read_only=False):
 		"""
 		ObjectDisplayWidget constructor
 
@@ -40,6 +40,7 @@ class ObjectDisplayWidget(QtGui.QTreeWidget):
 		self.itemExpanded.connect(lambda: self.resizeColumnToContents(0))
 		self.itemCollapsed.connect(lambda: self.resizeColumnToContents(0))
 		self._data = None
+		self.read_only = read_only
 
 	# ──────────
 	# Properties
@@ -77,6 +78,14 @@ class ObjectDisplayWidget(QtGui.QTreeWidget):
 		return locals()
 
 	data = property(**data())
+
+	@property
+	def read_only(self):
+		return self._read_only
+
+	@read_only.setter
+	def read_only(self, new_read_only_setting):
+		self._read_only = new_read_only_setting
 
 	# ────────────────
 	# Internal methods
@@ -178,6 +187,7 @@ class ObjectDisplayWidget(QtGui.QTreeWidget):
 
 			if inputWidget:
 				self.setItemWidget(item, 1, inputWidget)
+				inputWidget.setEnabled(not self._read_only)
 
 			# Third column
 			if isinstance(parent_obj, TypedList):
@@ -187,6 +197,7 @@ class ObjectDisplayWidget(QtGui.QTreeWidget):
 				inputWidget.setText("Remove element")
 				inputWidget.clicked.connect(lambda: self._elementDeletionRequired(parent_item, parent_obj, item, key))
 				self.setItemWidget(item, 2, inputWidget)
+				inputWidget.setEnabled(not self._read_only)
 
 		else:
 			# Empty name means obj is the root => do nothing
