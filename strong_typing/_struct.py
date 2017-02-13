@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 # Standard libraries
-from copy import deepcopy
 import collections
 from abc import ABCMeta
 
@@ -110,7 +109,7 @@ class Struct(collections.Mapping, TextualizeMixin):
 				raise TypeError(msg)
 
 	def __getitem__(self, key):
-		return deepcopy(getattr(self, key))
+		return getattr(self, key)
 
 	def __setattr__(self, name, value):
 		if (not name in self.keys()) and (not name[1:] in self.keys()):
