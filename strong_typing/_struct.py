@@ -58,25 +58,15 @@ class StructMeta(ABCMeta):
 		return ABCMeta.__new__(mcs, name, bases, attrs)
 
 	def __init__(cls, name, bases, attrs, **kwargs):
-		docu = """
-		%s:
-
-		Description: %s
-
-		:Parameters:
-
-		"""%(name, cls.__DESCRIPTION__)
+		docu = "%s\n\n"%cls.__DESCRIPTION__
+		docu += ":Parameters:\n\n"
 		for parameter in cls.__ATTRIBUTES__:
-			docu += """
-			``%s``
-
-				%s
-
-				Default: %s
-
-			"""%(parameter.id,\
-			     parameter.description,\
-			     str(parameter.default) if parameter.default != "" else "\"\"")
+			docu += "\t``%s``\n\n"%parameter.id
+			docu += "\t\t%s\n\n"%parameter.description
+			default_string = "``" if not isinstance(parameter.default, Struct) else ":class:`"+type(parameter.default).__name__+"`"
+			default_string += unicode(parameter.default).replace("\n","\n\n\t\t\t") if parameter.default != "" else "\"\""
+			default_string += "``" if not isinstance(parameter.default, Struct) else ""
+			docu += "\t\tDefault: %s\n\n"%default_string
 
 		cls.__doc__ = docu
 

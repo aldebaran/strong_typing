@@ -14,4 +14,5 @@ Contents:
 
    description
    howtouse
+   extra
 

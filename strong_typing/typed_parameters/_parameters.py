@@ -152,8 +152,9 @@ class EnumParameter(ParameterType):
 	Parameter describing a set of choices
 
 	:param choices: Set of possible choices. It can be a list of strings, or an
-	enum.Enum
+	                enum.Enum
 	:param default: Default value
+
 	If ``default`` is ``None``, the first of the available choices is selected as
 	default.
 	"""

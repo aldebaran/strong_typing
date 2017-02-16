@@ -1,12 +1,12 @@
 How to use
 ==========
 
-The main purpose of ``strong_typing`` is to help you create C++-like Struct, that is to say
+The main purpose of :py:mod:`strong_typing` is to help you create C++-like Struct, that is to say
 classes where the attributes are ALL defined and cannot be of any type. An undefined
 attribute cannot be added later on.
 
 To do this, we use several objects:
-  * ``strong_typing.Struct`` which must be overridden
+  * :py:class:`strong_typing.Struct` which must be overridden
   * ``strong_typing.typed_parameters.<type>Parameter`` which will help us to define our attributes' types
 
 Create a Struct
@@ -81,10 +81,10 @@ Now that we know how to add parameters, let's see how much cooler they can make 
 
 For this, let's have a look at the base class of all parameters
 
-.. autoclass:: strong_typing.typed_parameters.parameters.ParameterType
+.. autoclass:: strong_typing.typed_parameters._parameters.ParameterType
 
 This means we can customize the default value of our parameters, but also that we can
-give them any access we want.
+change the token through which they are accessed (as long as the final token is in snake-case).
 
 ::
 
@@ -110,13 +110,13 @@ give them any access we want.
   my_struct.a = None
   print my_struct.a # prints 10
 
-But now, you are probably wondering this:
-
 :Question:
-  How is it possible that in the first example, no value was defined as default, as there
-  is no default value for ``default`` ?
+    Hold on !
 
-Good question ! Let's examine that !
+    In ``ParameterType`` signature, there is no default value for the ``default`` attribute. But in the
+    first and second examples, we did not define a default value. Why is that ?
+
+Good question ! Let’s examine that !
 
 Parameters for immutable types
 ++++++++++++++++++++++++++++++
@@ -124,15 +124,15 @@ Parameters for immutable types
 In our previous example, the defined parameters had a default value because numeric parameters
 (int, float, ...) have a default default value.
 
-.. autoclass:: strong_typing.typed_parameters.parameters.IntegerParameter
+.. autoclass:: strong_typing.typed_parameters.IntegerParameter
     :show-inheritance:
 
-.. autoclass:: strong_typing.typed_parameters.parameters.FloatParameter
+.. autoclass:: strong_typing.typed_parameters.FloatParameter
     :show-inheritance:
 
 You can see that a default value is defined for both integer and float. But you can also notice that new arguments are available. What are they ?
 
-.. autoclass:: strong_typing.typed_parameters.parameters.NumericParameter
+.. autoclass:: strong_typing.typed_parameters._parameters.NumericParameter
     :show-inheritance:
 
 ``normalizer`` and ``range`` allow us to add new constraints on our values. We can define min
@@ -170,14 +170,14 @@ and max values, but also more specific restriction, like "odd numbers only"
 
 Another parameter that has a default default value is BoolParameter
 
-.. autoclass:: strong_typing.typed_parameters.parameters.BoolParameter
+.. autoclass:: strong_typing.typed_parameters.BoolParameter
     :show-inheritance:
 
 Nothing major to say about it
 
 The last "standard" immutable available parameter is StringParameter
 
-.. autoclass:: strong_typing.typed_parameters.parameters.StringParameter
+.. autoclass:: strong_typing.typed_parameters.StringParameter
     :show-inheritance:
 
 The only notable difference with the previous parameters is its behavior regarding the default
@@ -232,7 +232,7 @@ Like in C++, it is possible to define Enums in our classes. There are several wa
 Enums in Python, we have chosen to use the library `enum <https://docs.python.org/3/library/enum.html>`_
 which is automatically installed on Python3 (and can be installed via pip on Python2).
 
-.. autoclass:: strong_typing.typed_parameters.parameters.EnumParameter
+.. autoclass:: strong_typing.typed_parameters.EnumParameter
     :show-inheritance:
 
 You can see a ``choices`` argument in EnumParameter constructor, this is where you will insert
@@ -283,7 +283,7 @@ Now let's see how are handled the mutable types.
 
 Lists are handled through VectorParameters.
 
-.. autoclass:: strong_typing.typed_parameters.parameters.VectorParameter
+.. autoclass:: strong_typing.typed_parameters.VectorParameter
 
 You can see a new argument ``type``. It is here to define the type of element the list will contain.
 
@@ -306,7 +306,7 @@ Other Struct as parameters
 
 Finally, it is possible to define a Struct as parameter of another Struct.
 
-.. autoclass:: strong_typing.typed_parameters.parameters.StructParameter
+.. autoclass:: strong_typing.typed_parameters.StructParameter
 
 ``type`` is the type of the Struct you want to use as parameter. If ``default`` is left to
 ``None`` a default instance of Struct is used as default.
