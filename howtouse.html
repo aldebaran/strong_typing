@@ -1,0 +1,531 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2. How to use &#8212; strong_typing 1.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0-alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="3. Extra-functionalities" href="extra.html" />
+    <link rel="prev" title="1. Description" href="description.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="extra.html" title="3. Extra-functionalities"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="description.html" title="1. Description"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">strong_typing 1.0-alpha documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="how-to-use">
+<h1>2. How to use<a class="headerlink" href="#how-to-use" title="Permalink to this headline">¶</a></h1>
+<p>The main purpose of <code class="xref py py-mod docutils literal"><span class="pre">strong_typing</span></code> is to help you create C++-like Struct, that is to say
+classes where the attributes are ALL defined and cannot be of any type. An undefined
+attribute cannot be added later on.</p>
+<dl class="docutils">
+<dt>To do this, we use several objects:</dt>
+<dd><ul class="first last simple">
+<li><code class="xref py py-class docutils literal"><span class="pre">strong_typing.Struct</span></code> which must be overridden</li>
+<li><code class="docutils literal"><span class="pre">strong_typing.typed_parameters.&lt;type&gt;Parameter</span></code> which will help us to define our attributes&#8217; types</li>
+</ul>
+</dd>
+</dl>
+<div class="section" id="create-a-struct">
+<h2>2.1. Create a Struct<a class="headerlink" href="#create-a-struct" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s create our first Struct !</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># mystruct.py</span>
+
+<span class="kn">from</span> <span class="nn">strong_typing</span> <span class="k">import</span> <span class="n">Struct</span>
+
+<span class="k">class</span> <span class="nc">MyStruct</span><span class="p">(</span><span class="n">Struct</span><span class="p">):</span>
+  <span class="c1"># It is not very interesting, but as a starter, let&#39;s create a</span>
+  <span class="c1"># Struct without any attribute</span>
+  <span class="k">pass</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># script.py</span>
+<span class="kn">from</span> <span class="nn">mystruct</span> <span class="k">import</span> <span class="n">MyStruct</span>
+
+<span class="n">my_struct</span> <span class="o">=</span> <span class="n">MyStruct</span><span class="p">()</span>
+<span class="n">my_struct</span><span class="o">.</span><span class="n">any_attrib</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># raises AttributeError</span>
+</pre></div>
+</div>
+<p>And that&#8217;s it ! You just created your first strongly-typed Struct in Python !! An
+undefined attribute cannot be added at runtime.</p>
+</div>
+<div class="section" id="add-parameters">
+<h2>2.2. Add parameters<a class="headerlink" href="#add-parameters" title="Permalink to this headline">¶</a></h2>
+<p>Creating a Struct without parameters is not really interesting. Let&#8217;s add an int and
+a string to our class.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># mystruct.py</span>
+
+<span class="kn">from</span> <span class="nn">strong_typing</span> <span class="k">import</span> <span class="n">Struct</span>
+<span class="kn">from</span> <span class="nn">strong_typing.typed_parameters</span> <span class="k">import</span> <span class="p">(</span><span class="n">IntegerParameter</span><span class="p">,</span>
+                                            <span class="n">StringParameter</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MyStruct</span><span class="p">(</span><span class="n">Struct</span><span class="p">):</span>
+  <span class="n">__ATTRIBUTES__</span><span class="o">=</span><span class="p">[</span><span class="n">IntegerParameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_int&quot;</span><span class="p">),</span>
+                  <span class="n">StringParameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_str&quot;</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>We have now two attributes available for <code class="docutils literal"><span class="pre">MyStruct</span></code>. When someone will try to set them,
+the given value will be converted into the requested type if possible. If the given value
+cannot be converted, an error will be raised.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># script.py</span>
+<span class="kn">from</span> <span class="nn">mystruct</span> <span class="k">import</span> <span class="n">MyStruct</span>
+
+<span class="n">my_struct</span> <span class="o">=</span> <span class="n">MyStruct</span><span class="p">()</span>
+<span class="n">my_struct</span><span class="o">.</span><span class="n">my_int</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="c1"># is correct (10 will be stored)</span>
+<span class="n">my_struct</span><span class="o">.</span><span class="n">my_int</span> <span class="o">=</span> <span class="s2">&quot;20&quot;</span> <span class="c1"># is correct (20 will be stored)</span>
+<span class="n">my_struct</span><span class="o">.</span><span class="n">my_int</span> <span class="o">=</span> <span class="s2">&quot;aa&quot;</span> <span class="c1"># will raise an Exception</span>
+<span class="n">my_struct</span><span class="o">.</span><span class="n">my_str</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="c1"># is correct (&quot;10.0&quot; will be stored)</span>
+</pre></div>
+</div>
+<p>There is no limit to the number of parameters. Just add as many as you want in the
+__ATTRIBUTES__ list and you&#8217;re good to go.</p>
+</div>
+<div class="section" id="parametrize-the-parameters">
+<h2>2.3. Parametrize the parameters<a class="headerlink" href="#parametrize-the-parameters" title="Permalink to this headline">¶</a></h2>
+<p>Now that we know how to add parameters, let&#8217;s see how much cooler they can make our life.</p>
+<p>For this, let&#8217;s have a look at the base class of all parameters</p>
+<dl class="class">
+<dt id="strong_typing.typed_parameters._parameters.ParameterType">
+<em class="property">class </em><code class="descclassname">strong_typing.typed_parameters._parameters.</code><code class="descname">ParameterType</code><span class="sig-paren">(</span><em>name</em>, <em>description</em>, <em>default</em>, <em>id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#strong_typing.typed_parameters._parameters.ParameterType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base type for parameters</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> &#8211; Name of the parameter</li>
+<li><strong>description</strong> &#8211; Description of the parameter</li>
+<li><strong>default</strong> &#8211; Default value</li>
+<li><strong>id</strong> &#8211; Token used to access the parameter</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>If <code class="docutils literal"><span class="pre">default</span></code> is <code class="docutils literal"><span class="pre">None</span></code>, it means the parameter is optional and
+can have <code class="docutils literal"><span class="pre">None</span></code> as a value. Otherwise, setting the parameter to
+<code class="docutils literal"><span class="pre">None</span></code> actually resets it to the default value.</p>
+<p>If <code class="docutils literal"><span class="pre">id</span></code> is <code class="docutils literal"><span class="pre">None</span></code>, it will by default be the name of the
+parameter turned into a snakecase string. Otherwise, the only
+requirement is for the id to be a snakecase string (it doesn&#8217;t have
+to be related to the parameter&#8217;s name)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body">If name is &#8216;My Parameter&#8217;, then id will be &#8216;my_parameter&#8217;,
+and its value will be accessible by calling
+&lt;owning_class&gt;.my_parameter</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This means we can customize the default value of our parameters, but also that we can
+change the token through which they are accessed (as long as the final token is in snake-case).</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># mystruct.py</span>
+
+<span class="kn">from</span> <span class="nn">strong_typing</span> <span class="k">import</span> <span class="n">Struct</span>
+<span class="kn">from</span> <span class="nn">strong_typing.typed_parameters</span> <span class="k">import</span> <span class="n">IntegerParameter</span>
+
+<span class="k">class</span> <span class="nc">MyStruct</span><span class="p">(</span><span class="n">Struct</span><span class="p">):</span>
+  <span class="n">__ATTRIBUTES__</span><span class="o">=</span><span class="p">[</span><span class="n">IntegerParameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;My integer&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+                  <span class="n">IntegerParameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;My other integer&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)]</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># script.py</span>
+<span class="kn">from</span> <span class="nn">mystruct</span> <span class="k">import</span> <span class="n">MyStruct</span>
+
+<span class="n">my_struct</span> <span class="o">=</span> <span class="n">MyStruct</span><span class="p">()</span>
+<span class="nb">print</span> <span class="n">my_struct</span><span class="o">.</span><span class="n">a</span> <span class="c1"># prints 10</span>
+<span class="nb">print</span> <span class="n">my_struct</span><span class="o">.</span><span class="n">b</span> <span class="c1"># prints None</span>
+<span class="n">my_struct</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">my_struct</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="nb">print</span> <span class="n">my_struct</span><span class="o">.</span><span class="n">a</span> <span class="c1"># prints 10</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Question:</th><td class="field-body"><p class="first">Hold on !</p>
+<p class="last">In <code class="docutils literal"><span class="pre">ParameterType</span></code> signature, there is no default value for the <code class="docutils literal"><span class="pre">default</span></code> attribute. But in the
+first and second examples, we did not define a default value. Why is that ?</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Good question ! Let’s examine that !</p>
+<div class="section" id="parameters-for-immutable-types">
+<h3>2.3.1. Parameters for immutable types<a class="headerlink" href="#parameters-for-immutable-types" title="Permalink to this headline">¶</a></h3>
+<p>In our previous example, the defined parameters had a default value because numeric parameters
+(int, float, ...) have a default default value.</p>
+<dl class="class">
+<dt id="strong_typing.typed_parameters.IntegerParameter">
+<em class="property">class </em><code class="descclassname">strong_typing.typed_parameters.</code><code class="descname">IntegerParameter</code><span class="sig-paren">(</span><em>name=''</em>, <em>description=''</em>, <em>default=0</em>, <em>normalizer=None</em>, <em>range=(None</em>, <em>None)</em>, <em>id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#strong_typing.typed_parameters.IntegerParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#strong_typing.typed_parameters._parameters.NumericParameter" title="strong_typing.typed_parameters._parameters.NumericParameter"><code class="xref py py-class docutils literal"><span class="pre">strong_typing.typed_parameters._parameters.NumericParameter</span></code></a></p>
+<p>Integer parameter</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="strong_typing.typed_parameters.FloatParameter">
+<em class="property">class </em><code class="descclassname">strong_typing.typed_parameters.</code><code class="descname">FloatParameter</code><span class="sig-paren">(</span><em>name=''</em>, <em>description=''</em>, <em>default=0.0</em>, <em>normalizer=None</em>, <em>range=(None</em>, <em>None)</em>, <em>id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#strong_typing.typed_parameters.FloatParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#strong_typing.typed_parameters._parameters.NumericParameter" title="strong_typing.typed_parameters._parameters.NumericParameter"><code class="xref py py-class docutils literal"><span class="pre">strong_typing.typed_parameters._parameters.NumericParameter</span></code></a></p>
+<p>Float parameter</p>
+</dd></dl>
+
+<p>You can see that a default value is defined for both integer and float. But you can also notice that new arguments are available. What are they ?</p>
+<dl class="class">
+<dt id="strong_typing.typed_parameters._parameters.NumericParameter">
+<em class="property">class </em><code class="descclassname">strong_typing.typed_parameters._parameters.</code><code class="descname">NumericParameter</code><span class="sig-paren">(</span><em>name</em>, <em>description</em>, <em>default</em>, <em>normalizer</em>, <em>range=(None</em>, <em>None)</em>, <em>id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#strong_typing.typed_parameters._parameters.NumericParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#strong_typing.typed_parameters._parameters.ParameterType" title="strong_typing.typed_parameters._parameters.ParameterType"><code class="xref py py-class docutils literal"><span class="pre">strong_typing.typed_parameters._parameters.ParameterType</span></code></a></p>
+<p>Base type for numeric parameters</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>normalizer</strong> &#8211; Extra-verification function</li>
+<li><strong>range</strong> &#8211; Couple of values representing the lowest and
+highest possible values the parameter can take
+It is possible to define only one of the two and
+leave the other to None to have only a minimum or
+only a maximum</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal"><span class="pre">normalizer</span></code> is a user-defined function allowing him to perform
+an extra-verification on the inserted value. For instance, a function
+can be added to accept only odd numbers, or perfect square number. In
+case the inserted value does not match the requirement, the function
+must provide a valid value instead of the inserted one.</p>
+</dd></dl>
+
+<p><code class="docutils literal"><span class="pre">normalizer</span></code> and <code class="docutils literal"><span class="pre">range</span></code> allow us to add new constraints on our values. We can define min
+and max values, but also more specific restriction, like &#8220;odd numbers only&#8221;</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># mystruct.py</span>
+
+<span class="kn">from</span> <span class="nn">strong_typing</span> <span class="k">import</span> <span class="n">Struct</span>
+<span class="kn">from</span> <span class="nn">strong_typing.typed_parameters</span> <span class="k">import</span> <span class="n">IntegerParameter</span>
+
+<span class="k">def</span> <span class="nf">make_odd</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+  <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span>
+
+<span class="k">class</span> <span class="nc">MyStruct</span><span class="p">(</span><span class="n">Struct</span><span class="p">):</span>
+  <span class="n">__ATTRIBUTES__</span><span class="o">=</span><span class="p">[</span><span class="n">IntegerParameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;norm&quot;</span><span class="p">,</span> <span class="n">normalizer</span><span class="o">=</span><span class="n">make_odd</span><span class="p">),</span>
+                  <span class="n">IntegerParameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;ranged&quot;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">))]</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># script.py</span>
+<span class="kn">from</span> <span class="nn">mystruct</span> <span class="k">import</span> <span class="n">MyStruct</span>
+
+<span class="n">my_struct</span> <span class="o">=</span> <span class="n">MyStruct</span><span class="p">()</span>
+<span class="nb">print</span> <span class="n">my_struct</span><span class="o">.</span><span class="n">norm</span> <span class="c1"># prints 1</span>
+<span class="c1"># the default is 0, but as we only accept odd numbers,</span>
+<span class="c1"># 0 was transformed in 1</span>
+
+<span class="nb">print</span> <span class="n">my_struct</span><span class="o">.</span><span class="n">range</span> <span class="c1"># prints 10</span>
+<span class="c1"># the default is 0, but as we only accept numbers</span>
+<span class="c1"># between 10 and 20, 0 became 10</span>
+</pre></div>
+</div>
+<p>Another parameter that has a default default value is BoolParameter</p>
+<dl class="class">
+<dt id="strong_typing.typed_parameters.BoolParameter">
+<em class="property">class </em><code class="descclassname">strong_typing.typed_parameters.</code><code class="descname">BoolParameter</code><span class="sig-paren">(</span><em>name=''</em>, <em>description=''</em>, <em>default=False</em>, <em>id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#strong_typing.typed_parameters.BoolParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#strong_typing.typed_parameters._parameters.ParameterType" title="strong_typing.typed_parameters._parameters.ParameterType"><code class="xref py py-class docutils literal"><span class="pre">strong_typing.typed_parameters._parameters.ParameterType</span></code></a></p>
+</dd></dl>
+
+<p>Nothing major to say about it</p>
+<p>The last &#8220;standard&#8221; immutable available parameter is StringParameter</p>
+<dl class="class">
+<dt id="strong_typing.typed_parameters.StringParameter">
+<em class="property">class </em><code class="descclassname">strong_typing.typed_parameters.</code><code class="descname">StringParameter</code><span class="sig-paren">(</span><em>name=''</em>, <em>description=''</em>, <em>default=None</em>, <em>id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#strong_typing.typed_parameters.StringParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#strong_typing.typed_parameters._parameters.ParameterType" title="strong_typing.typed_parameters._parameters.ParameterType"><code class="xref py py-class docutils literal"><span class="pre">strong_typing.typed_parameters._parameters.ParameterType</span></code></a></p>
+</dd></dl>
+
+<p>The only notable difference with the previous parameters is its behavior regarding the default
+value. Unlike the others, a StringParameter does not allow to set a value to <code class="docutils literal"><span class="pre">None</span></code>, even if
+it is the default value selected. A <code class="docutils literal"><span class="pre">None</span></code> default value will be transformed in an empty string.
+Because of that, setting a string to &#8220;&#8221; is equivalent to setting it to None, ie to resetting it
+to default value. As a result, if you want to allow your string to be empty, default value MUST
+be &#8220;&#8221; or None (same as numeric or bool whose default must be None if you want this value to be
+allowed).</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># mystruct.py</span>
+
+<span class="kn">from</span> <span class="nn">strong_typing</span> <span class="k">import</span> <span class="n">Struct</span>
+<span class="kn">from</span> <span class="nn">strong_typing.typed_parameters</span> <span class="k">import</span> <span class="n">StringParameter</span>
+
+<span class="k">class</span> <span class="nc">MyStruct</span><span class="p">(</span><span class="n">Struct</span><span class="p">):</span>
+  <span class="n">__ATTRIBUTES__</span><span class="o">=</span><span class="p">[</span><span class="n">StringParameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;str1&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">),</span>
+                  <span class="n">StringParameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;str2&quot;</span><span class="p">)]</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># script.py</span>
+<span class="kn">from</span> <span class="nn">mystruct</span> <span class="k">import</span> <span class="n">MyStruct</span>
+
+<span class="n">my_struct</span> <span class="o">=</span> <span class="n">MyStruct</span><span class="p">()</span>
+<span class="nb">print</span> <span class="n">my_struct</span><span class="o">.</span><span class="n">str1</span> <span class="c1"># prints &quot;default&quot;</span>
+<span class="n">my_struct</span><span class="o">.</span><span class="n">str1</span> <span class="o">=</span> <span class="s2">&quot;string&quot;</span>
+<span class="nb">print</span> <span class="n">my_struct</span><span class="o">.</span><span class="n">str1</span> <span class="c1"># prints &quot;string&quot;</span>
+<span class="n">my_struct</span><span class="o">.</span><span class="n">str1</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># reset to default</span>
+<span class="nb">print</span> <span class="n">my_struct</span><span class="o">.</span><span class="n">str1</span> <span class="c1"># prints &quot;default&quot;</span>
+<span class="n">my_struct</span><span class="o">.</span><span class="n">str1</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="c1"># ALSO reset to default</span>
+<span class="nb">print</span> <span class="n">my_struct</span><span class="o">.</span><span class="n">str1</span> <span class="c1"># prints &quot;default&quot;</span>
+
+
+<span class="nb">print</span> <span class="n">my_struct</span><span class="o">.</span><span class="n">str2</span> <span class="c1"># prints &quot;&quot;</span>
+<span class="n">my_struct</span><span class="o">.</span><span class="n">str1</span> <span class="o">=</span> <span class="s2">&quot;string&quot;</span>
+<span class="nb">print</span> <span class="n">my_struct</span><span class="o">.</span><span class="n">str1</span> <span class="c1"># prints &quot;string&quot;</span>
+<span class="n">my_struct</span><span class="o">.</span><span class="n">str1</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># reset to default</span>
+<span class="nb">print</span> <span class="n">my_struct</span><span class="o">.</span><span class="n">str1</span> <span class="c1"># prints &quot;&quot;</span>
+<span class="n">my_struct</span><span class="o">.</span><span class="n">str1</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="c1"># ALSO reset to default</span>
+<span class="nb">print</span> <span class="n">my_struct</span><span class="o">.</span><span class="n">str1</span> <span class="c1"># prints &quot;&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="a-special-type-of-immutable-enum">
+<h3>2.3.2. A special type of immutable: Enum<a class="headerlink" href="#a-special-type-of-immutable-enum" title="Permalink to this headline">¶</a></h3>
+<p>Like in C++, it is possible to define Enums in our classes. There are several ways to implement
+Enums in Python, we have chosen to use the library <a class="reference external" href="https://docs.python.org/3/library/enum.html">enum</a>
+which is automatically installed on Python3 (and can be installed via pip on Python2).</p>
+<dl class="class">
+<dt id="strong_typing.typed_parameters.EnumParameter">
+<em class="property">class </em><code class="descclassname">strong_typing.typed_parameters.</code><code class="descname">EnumParameter</code><span class="sig-paren">(</span><em>choices</em>, <em>name=''</em>, <em>description=''</em>, <em>default=None</em>, <em>id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#strong_typing.typed_parameters.EnumParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#strong_typing.typed_parameters._parameters.ParameterType" title="strong_typing.typed_parameters._parameters.ParameterType"><code class="xref py py-class docutils literal"><span class="pre">strong_typing.typed_parameters._parameters.ParameterType</span></code></a></p>
+<p>Parameter describing a set of choices</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>choices</strong> &#8211; Set of possible choices. It can be a list of strings, or an
+enum.Enum</li>
+<li><strong>default</strong> &#8211; Default value</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>If <code class="docutils literal"><span class="pre">default</span></code> is <code class="docutils literal"><span class="pre">None</span></code>, the first of the available choices is selected as
+default.</p>
+</dd></dl>
+
+<p>You can see a <code class="docutils literal"><span class="pre">choices</span></code> argument in EnumParameter constructor, this is where you will insert
+your enum. You can create an Enum, but you can also more simply give a list of strings.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Warning:</th><td class="field-body">The default value of an EnumParameter cannot be <code class="docutils literal"><span class="pre">None</span></code>. If default value is not set, the first
+value of your list/enum will be used as default.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># mystruct.py</span>
+
+<span class="kn">from</span> <span class="nn">strong_typing</span> <span class="k">import</span> <span class="n">Struct</span>
+<span class="kn">from</span> <span class="nn">strong_typing.typed_parameters</span> <span class="k">import</span> <span class="n">EnumParameter</span>
+
+<span class="kn">import</span> <span class="nn">enum</span>
+
+<span class="k">class</span> <span class="nc">Options</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+  <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="k">class</span> <span class="nc">MyStruct</span><span class="p">(</span><span class="n">Struct</span><span class="p">):</span>
+  <span class="n">__ATTRIBUTES__</span><span class="o">=</span><span class="p">[</span><span class="n">EnumParameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;choice1&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">]),</span>
+                  <span class="n">EnumParameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;choice2&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">Options</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">Choices</span><span class="o">.</span><span class="n">b</span><span class="p">)]</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># script.py</span>
+<span class="kn">from</span> <span class="nn">mystruct</span> <span class="k">import</span> <span class="n">MyStruct</span>
+
+<span class="n">my_struct</span> <span class="o">=</span> <span class="n">MyStruct</span><span class="p">()</span>
+<span class="nb">print</span> <span class="n">my_struct</span><span class="o">.</span><span class="n">choice1</span> <span class="c1"># prints &quot;a&quot;</span>
+<span class="n">my_struct</span><span class="o">.</span><span class="n">choice1</span> <span class="o">=</span> <span class="s2">&quot;b&quot;</span>
+<span class="nb">print</span> <span class="n">my_struct</span><span class="o">.</span><span class="n">choice1</span> <span class="c1"># prints &quot;b&quot;</span>
+<span class="n">my_struct</span><span class="o">.</span><span class="n">choice1</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># reset to default</span>
+<span class="nb">print</span> <span class="n">my_struct</span><span class="o">.</span><span class="n">choice1</span> <span class="c1"># prints &quot;a&quot;</span>
+
+<span class="nb">print</span> <span class="n">my_struct</span><span class="o">.</span><span class="n">choice2</span> <span class="c1"># prints &quot;&lt;Choices.a : 1&gt;&quot;</span>
+<span class="n">my_struct</span><span class="o">.</span><span class="n">choice2</span> <span class="o">=</span> <span class="n">Choices</span><span class="o">.</span><span class="n">b</span> <span class="c1"># works</span>
+<span class="n">my_struct</span><span class="o">.</span><span class="n">choice2</span> <span class="o">=</span> <span class="s2">&quot;b&quot;</span> <span class="c1"># also works (but b is converted in Choices.b)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="parameters-for-mutable-types">
+<h3>2.3.3. Parameters for mutable types<a class="headerlink" href="#parameters-for-mutable-types" title="Permalink to this headline">¶</a></h3>
+<p>Now let&#8217;s see how are handled the mutable types.</p>
+<p>Lists are handled through VectorParameters.</p>
+<dl class="class">
+<dt id="strong_typing.typed_parameters.VectorParameter">
+<em class="property">class </em><code class="descclassname">strong_typing.typed_parameters.</code><code class="descname">VectorParameter</code><span class="sig-paren">(</span><em>type</em>, <em>name=''</em>, <em>description=''</em>, <em>default=None</em>, <em>id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#strong_typing.typed_parameters.VectorParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles list</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>type</strong> &#8211; Type of the elements stored in the list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>You can see a new argument <code class="docutils literal"><span class="pre">type</span></code>. It is here to define the type of element the list will contain.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Warning:</th><td class="field-body">For now, it is not possible for a list to contain other lists with a defined type. We wish we can
+add this in a latter version.</td>
+</tr>
+</tbody>
+</table>
+<p>As for the strings, it is not possible to have <code class="docutils literal"><span class="pre">None</span></code> as a default value. It will be replaced by an empty
+list. Therefore, if you set your list parameter to <code class="docutils literal"><span class="pre">None</span></code>, it will actually be set to <code class="docutils literal"><span class="pre">[]</span></code>. And if you
+define a default value (which must be a list), then this list will be used if you set your parameter to <code class="docutils literal"><span class="pre">None</span></code>.
+However, unlike a StringParameter without any default value, it IS possible to set your list to <code class="docutils literal"><span class="pre">[]</span></code> even
+with a non-default value: you can just remove all elements from the list, without assigning it directly a
+value.</p>
+<p>Maps are currently not handled. This will probably be done in a future version</p>
+</div>
+<div class="section" id="other-struct-as-parameters">
+<h3>2.3.4. Other Struct as parameters<a class="headerlink" href="#other-struct-as-parameters" title="Permalink to this headline">¶</a></h3>
+<p>Finally, it is possible to define a Struct as parameter of another Struct.</p>
+<dl class="class">
+<dt id="strong_typing.typed_parameters.StructParameter">
+<em class="property">class </em><code class="descclassname">strong_typing.typed_parameters.</code><code class="descname">StructParameter</code><span class="sig-paren">(</span><em>type</em>, <em>default=None</em>, <em>name=''</em>, <em>description=''</em>, <em>id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#strong_typing.typed_parameters.StructParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles a Struct</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>type</strong> &#8211; Type of the Struct to be used</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p><code class="docutils literal"><span class="pre">type</span></code> is the type of the Struct you want to use as parameter. If <code class="docutils literal"><span class="pre">default</span></code> is left to
+<code class="docutils literal"><span class="pre">None</span></code> a default instance of Struct is used as default.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">2. How to use</a><ul>
+<li><a class="reference internal" href="#create-a-struct">2.1. Create a Struct</a></li>
+<li><a class="reference internal" href="#add-parameters">2.2. Add parameters</a></li>
+<li><a class="reference internal" href="#parametrize-the-parameters">2.3. Parametrize the parameters</a><ul>
+<li><a class="reference internal" href="#parameters-for-immutable-types">2.3.1. Parameters for immutable types</a></li>
+<li><a class="reference internal" href="#a-special-type-of-immutable-enum">2.3.2. A special type of immutable: Enum</a></li>
+<li><a class="reference internal" href="#parameters-for-mutable-types">2.3.3. Parameters for mutable types</a></li>
+<li><a class="reference internal" href="#other-struct-as-parameters">2.3.4. Other Struct as parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="description.html"
+                        title="previous chapter">1. Description</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="extra.html"
+                        title="next chapter">3. Extra-functionalities</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/howtouse.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="extra.html" title="3. Extra-functionalities"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="description.html" title="1. Description"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">strong_typing 1.0-alpha documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Surya Ambrose.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>3. Extra-functionalities &#8212; strong_typing 1.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0-alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="2. How to use" href="howtouse.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="howtouse.html" title="2. How to use"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">strong_typing 1.0-alpha documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="extra-functionalities">
+<h1>3. Extra-functionalities<a class="headerlink" href="#extra-functionalities" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="auto-documentation">
+<h2>3.1. Auto-documentation<a class="headerlink" href="#auto-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Classes and parameters create their docstrings based on:</dt>
+<dd><ul class="first last simple">
+<li>Their <code class="docutils literal"><span class="pre">description</span></code> attribute for <code class="xref py py-class docutils literal"><span class="pre">ParameterType</span></code></li>
+<li>The <code class="docutils literal"><span class="pre">__DESCRIPTION__</span></code> field for <code class="xref py py-class docutils literal"><span class="pre">Struct</span></code></li>
+</ul>
+</dd>
+</dl>
+<p>Then you can use this docstring to generate documentation with sphinx, you can
+visualize it in a Python shell, and so on.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"><p class="first">Let&#8217;s write a Struct like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># mystruct.py</span>
+
+<span class="kn">import</span> <span class="nn">enum</span>
+<span class="kn">from</span> <span class="nn">strong_typing</span> <span class="k">import</span> <span class="n">Struct</span>
+<span class="kn">from</span> <span class="nn">strong_typing.typed_parameters</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">strong_typing.typed_parameters.normalizers</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="k">class</span> <span class="nc">InnerStruct</span><span class="p">(</span><span class="n">Struct</span><span class="p">):</span>
+	<span class="n">__ATTRIBUTES__</span><span class="o">=</span> <span class="p">[</span>
+		<span class="n">IntegerParameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">,</span>
+		                 <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Value between 0 and 10&quot;</span><span class="p">,</span>
+		                 <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">]),</span>
+		<span class="n">FloatParameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;optional_float&quot;</span><span class="p">,</span>
+		               <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+		               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A float value, but that can be empty&quot;</span><span class="p">)</span>
+	<span class="p">]</span>
+
+	<span class="n">__DESCRIPTION__</span> <span class="o">=</span> <span class="s2">&quot;A struct that will be owned by another one&quot;</span>
+
+<span class="k">class</span> <span class="nc">Choices</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+	<span class="n">A</span><span class="o">=</span><span class="mi">0</span>
+	<span class="n">B</span><span class="o">=</span><span class="mi">1</span>
+	<span class="n">C</span><span class="o">=</span><span class="mi">2</span>
+
+<span class="k">class</span> <span class="nc">MyStruct</span><span class="p">(</span><span class="n">Struct</span><span class="p">):</span>
+	<span class="n">__ATTRIBUTES__</span><span class="o">=</span> <span class="p">[</span>
+		<span class="n">IntegerParameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;This is an int&quot;</span><span class="p">),</span>
+		<span class="n">IntegerParameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;ranged_int&quot;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Int value between 0 and 10&quot;</span><span class="p">),</span>
+		<span class="n">IntegerParameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;odd_int&quot;</span><span class="p">,</span> <span class="n">normalizer</span><span class="o">=</span><span class="n">ODD_NORMALIZER</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Odd-only int&quot;</span><span class="p">),</span>
+		<span class="n">StringParameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;str&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Enter the text you want here&quot;</span><span class="p">),</span>
+		<span class="n">StringParameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;str_with_default&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;lol&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Your favorite laughing expression&quot;</span><span class="p">),</span>
+		<span class="n">EnumParameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;enum_from_enum&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">Choices</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Be sure to make the right choice&quot;</span><span class="p">),</span>
+		<span class="n">VectorParameter</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;optional_vector_int&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The ages of your children&quot;</span><span class="p">),</span>
+		<span class="n">StructParameter</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">InnerStruct</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;struct&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A struct in the struct&quot;</span><span class="p">),</span>
+	<span class="p">]</span>
+
+	<span class="n">__DESCRIPTION__</span><span class="o">=</span><span class="s2">&quot;A Struct to demonstrate how auto documentation works&quot;</span>
+</pre></div>
+</div>
+<p>We can then generate its documentation using this</p>
+<div class="highlight-rest"><div class="highlight"><pre><span></span><span class="cp">.. doc.rst</span>
+
+<span class="p">..</span> <span class="ow">automodule</span><span class="p">::</span> mystruct
+        <span class="nc">:members:</span>
+</pre></div>
+</div>
+<p>Which will generate the following output:</p>
+<span class="target" id="module-mystruct"></span><dl class="class">
+<dt id="mystruct.InnerStruct">
+<em class="property">class </em><code class="descclassname">mystruct.</code><code class="descname">InnerStruct</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mystruct.InnerStruct" title="Permalink to this definition">¶</a></dt>
+<dd><p>A struct that will be owned by another one</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><code class="docutils literal"><span class="pre">int</span></code></p>
+<blockquote>
+<div><p>Value between 0 and 10</p>
+<p>Default: <code class="docutils literal"><span class="pre">0</span></code></p>
+</div></blockquote>
+<p><code class="docutils literal"><span class="pre">optional_float</span></code></p>
+<blockquote class="last">
+<div><p>A float value, but that can be empty</p>
+<p>Default: <code class="docutils literal"><span class="pre">None</span></code></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="last class">
+<dt id="mystruct.MyStruct">
+<em class="property">class </em><code class="descclassname">mystruct.</code><code class="descname">MyStruct</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mystruct.MyStruct" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Struct to demonstrate how auto documentation works</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><code class="docutils literal"><span class="pre">int</span></code></p>
+<blockquote>
+<div><p>This is an int</p>
+<p>Default: <code class="docutils literal"><span class="pre">0</span></code></p>
+</div></blockquote>
+<p><code class="docutils literal"><span class="pre">ranged_int</span></code></p>
+<blockquote>
+<div><p>Int value between 0 and 10</p>
+<p>Default: <code class="docutils literal"><span class="pre">0</span></code></p>
+</div></blockquote>
+<p><code class="docutils literal"><span class="pre">odd_int</span></code></p>
+<blockquote>
+<div><p>Odd-only int</p>
+<p>Default: <code class="docutils literal"><span class="pre">0</span></code></p>
+</div></blockquote>
+<p><code class="docutils literal"><span class="pre">str</span></code></p>
+<blockquote>
+<div><p>Enter the text you want here</p>
+<p>Default: <code class="docutils literal"><span class="pre">&quot;&quot;</span></code></p>
+</div></blockquote>
+<p><code class="docutils literal"><span class="pre">str_with_default</span></code></p>
+<blockquote>
+<div><p>Your favorite laughing expression</p>
+<p>Default: <code class="docutils literal"><span class="pre">lol</span></code></p>
+</div></blockquote>
+<p><code class="docutils literal"><span class="pre">enum_from_enum</span></code></p>
+<blockquote>
+<div><p>Be sure to make the right choice</p>
+<p>Default: <code class="docutils literal"><span class="pre">Choices.A</span></code></p>
+</div></blockquote>
+<p><code class="docutils literal"><span class="pre">optional_vector_int</span></code></p>
+<blockquote>
+<div><p>The ages of your children</p>
+<p>Default: <code class="docutils literal"><span class="pre">[]</span></code></p>
+</div></blockquote>
+<p><code class="docutils literal"><span class="pre">struct</span></code></p>
+<blockquote class="last">
+<div><p>A struct in the struct</p>
+<p>Default: <a class="reference internal" href="#mystruct.InnerStruct" title="mystruct.InnerStruct"><code class="xref py py-class docutils literal"><span class="pre">InnerStruct</span></code></a></p>
+<blockquote>
+<div><p>├─ int: 0</p>
+<p>└─ optional_float: None</p>
+</div></blockquote>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3. Extra-functionalities</a><ul>
+<li><a class="reference internal" href="#auto-documentation">3.1. Auto-documentation</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="howtouse.html"
+                        title="previous chapter">2. How to use</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/extra.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="howtouse.html" title="2. How to use"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">strong_typing 1.0-alpha documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Surya Ambrose.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+    </div>
+  </body>
+</html>

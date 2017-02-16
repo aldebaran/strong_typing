@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>1. Description &#8212; strong_typing 1.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0-alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="2. How to use" href="howtouse.html" />
+    <link rel="prev" title="Welcome to strong_typing’s documentation!" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="howtouse.html" title="2. How to use"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to strong_typing’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">strong_typing 1.0-alpha documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="description">
+<h1>1. Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h1>
+<p><strong>strong_typing</strong> is a Python package containing some classes to create strongly typed structures in Python</p>
+<div class="section" id="strong-typing-in-a-few-words">
+<h2>1.1. <code class="docutils literal"><span class="pre">strong_typing</span></code> in a few words<a class="headerlink" href="#strong-typing-in-a-few-words" title="Permalink to this headline">¶</a></h2>
+<p>In Python, all variables are weakly typed, which means that a variable can take all values of
+any type. The Python interpreter will then infer at runtime which operations this variable can
+undergo depending on what it contains. This is called &#8220;type inference&#8221;.</p>
+<p>This can be a problem in different situations</p>
+<blockquote>
+<div><ul class="simple">
+<li>A function that does not receive the expected type as input</li>
+<li>A variable or a class attribute whose type is changed through assignment</li>
+</ul>
+</div></blockquote>
+<p>To avoid functions being called with bad arguments, you can use Python&#8217;s <a class="reference external" href="https://docs.python.org/3/library/typing.html">typing module</a>) (however only with Python3).
+To check if a variable is not incorrectly used, you can install and run <a class="reference external" href="http://mypy.readthedocs.io/en/latest/">mypy module</a>).</p>
+<p>But if the latest is great for static check (without running the code), it does not work
+on the code you don&#8217;t own.</p>
+<p>If, for instance you design a class expecting a certain type of attributes, <code class="docutils literal"><span class="pre">mypy</span></code> can very
+easily detect if you don&#8217;t mistakenly override these attributes with wrong typed data.
+But if you put this class in a Python package and that someone else uses it, there
+is no way to be sure they will respect your attribute&#8217;s type.
+To make sure they do, you would need to define a descriptor&#8217;s class for each attribute and
+define a setter function protecting your value against abusive set. That&#8217;s what we did :)</p>
+<p>In the end, your class could look like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyTypedStruct</span><span class="p">(</span><span class="n">Struct</span><span class="p">):</span>
+  <span class="n">__ATTRIBUTES__</span> <span class="o">=</span> <span class="p">[</span><span class="n">IntegerParameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_int&quot;</span><span class="p">),</span>
+                    <span class="n">FloatParameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_float&quot;</span><span class="p">)]</span>
+  <span class="n">__DESCRIPTION__</span> <span class="o">=</span> <span class="s2">&quot;A sample of class with typed attributes&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="want-to-know-more">
+<h2>1.2. Want to know more ?<a class="headerlink" href="#want-to-know-more" title="Permalink to this headline">¶</a></h2>
+<p>Find the complete documentation <a class="reference external" href="http://doc.aldebaran.lan/doc/master/strong_typing/howtouse.html">here</a>.</p>
+<p>You can also download the code from <a class="reference external" href="https://gitlab.aldebaran.lan/sambrose/py_strong_typing.git">here</a>
+or install the latest release with:</p>
+<blockquote>
+<div><code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">strong_typing</span> <span class="pre">--find-links=http://10.0.2.107/pypi</span> <span class="pre">--extra-index-url</span> <span class="pre">http://10.0.2.107/pypi</span> <span class="pre">--trusted-host</span> <span class="pre">10.0.2.107</span></code></div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">1. Description</a><ul>
+<li><a class="reference internal" href="#strong-typing-in-a-few-words">1.1. <code class="docutils literal"><span class="pre">strong_typing</span></code> in a few words</a></li>
+<li><a class="reference internal" href="#want-to-know-more">1.2. Want to know more ?</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to strong_typing&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="howtouse.html"
+                        title="next chapter">2. How to use</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/description.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="howtouse.html" title="2. How to use"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to strong_typing’s documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">strong_typing 1.0-alpha documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Surya Ambrose.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+    </div>
+  </body>
+</html>
