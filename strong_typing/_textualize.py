@@ -13,6 +13,24 @@ TREE_INDENT=lambda x: (u'─' if x is unicode else '-')*(INDENT_SIZE-2) + " "
 TREE_MID_INDENT=lambda x: (u'├' if x is unicode else '|') + TREE_INDENT(x)
 TREE_LAST_INDENT=lambda x: (u'└' if x is unicode else '|') + TREE_INDENT(x)
 
+def textualize_mapping(mapping, display_type=unicode):
+	"""
+	Pretty print of mappings
+
+	:param mapping: Mapping to display
+	:param display_type: Output type (str or unicode, unicode is default)
+	"""
+	return textualize(mapping.keys(), mapping, display_type)
+
+def textualize_sequence(sequence, display_type=unicode):
+	"""
+	Pretty print of sequence
+
+	:param sequence: Sequence to display
+	:param display_type: Output type (str or unicode, unicode is default)
+	"""
+	return textualize(range(len(sequence)), sequence, display_type)
+
 def textualize(keys, map, display_type):
 	res_str = ""
 	for key in keys:
@@ -43,15 +61,14 @@ class TextualizeMixin(object):
 
 	def _textualize(self, display_type):
 		if isinstance(self, collections.Mapping):
-			keys = self.keys()
-			if len(keys) == 0:
+			if len(self) == 0:
 				return "{}"
+			return textualize_mapping(self, display_type)
 		elif isinstance(self, collections.Sequence):
-			keys = range(len(self))
-			if len(keys) == 0:
+			if len(self) == 0:
 				return "[]"
+			return textualize_sequence(self, display_type)
 		else:
 			raise Exception("Only collections.{Sequence,Mapping} are supported")
-		return textualize(keys, self, display_type)
 
 __all__=["TextualizeMixin"]
