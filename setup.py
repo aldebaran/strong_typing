@@ -14,7 +14,6 @@ except ImportError:
 	__version__=open(os.path.join(CONTAINING_DIRECTORY,"strong_typing/VERSION")).read().split()[0]
 
 package_list = find_packages(where=CONTAINING_DIRECTORY)
-
 setup(
     name='strong_typing',
     version=__version__,
