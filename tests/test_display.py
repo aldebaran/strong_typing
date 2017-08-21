@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 
-# Standard libraries
-import unittest
-
 # Third-party libraries
 import enum
+import pytest
 try:
 	from PySide.QtGui import QApplication
 	qt_available = True
 except:
 	qt_available = False
 
-# strong_typing
-from strong_typing import ObjectDisplayWidget
+# Local modules
 from strong_typing import Struct
 from strong_typing.typed_parameters import *
 from strong_typing.typed_parameters.normalizers import *
@@ -28,7 +25,7 @@ class Choices(enum.Enum):
 	B=1
 	C=2
 
-class TestStruct(Struct):
+class SpecialTestStruct(Struct):
 	__ATTRIBUTES__= [
 		IntegerParameter(name="int"),
 		IntegerParameter(name="ranged_int", range=[0,10]),
@@ -50,24 +47,17 @@ class TestStruct(Struct):
 	]
 
 if qt_available:
-	class DisplayObjectTest(unittest.TestCase):
+	from strong_typing import ObjectDisplayWidget
 
-		def setUp(self):
-			self.app = QApplication([])
-			self.instance = TestStruct()
+	def test_display(qtbot):
+		instance = SpecialTestStruct()
+		widget = ObjectDisplayWidget()
+		widget.data = instance
+		qtbot.addWidget(widget)
+		widget.show()
+		qtbot.waitForWindowShown(widget)
 
-		def test_display(self):
-			self.app.main_window = ObjectDisplayWidget()
-			self.app.main_window.data = self.instance
-			self.app.main_window.show()
-			self.app.exec_()
-
-class TextualizeObjectTest(unittest.TestCase):
-
-	def setUp(self):
-		self.instance = TestStruct()
-
-	def test_textualize(self):
-		print str(self.instance)
-		print unicode(self.instance)
-
+def test_textualize():
+	instance = SpecialTestStruct()
+	print str(instance)
+	print unicode(instance)
