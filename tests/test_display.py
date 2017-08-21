@@ -4,7 +4,7 @@
 import enum
 import pytest
 try:
-	from PySide.QtGui import QApplication
+	import python_qt_binding
 	qt_available = True
 except:
 	qt_available = False
