@@ -6,11 +6,18 @@ import os
 
 CONTAINING_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 
+try:
+	from utils import get_version_from_tag
+	__version__ = get_version_from_tag()
+	open(os.path.join(CONTAINING_DIRECTORY,"strong_typing/VERSION"), "w").write(__version__)
+except ImportError:
+	__version__=open(os.path.join(CONTAINING_DIRECTORY,"strong_typing/VERSION")).read().split()[0]
+
 package_list = find_packages(where=CONTAINING_DIRECTORY)
 
 setup(
     name='strong_typing',
-    version=open(os.path.join(CONTAINING_DIRECTORY,"strong_typing/VERSION")).read().split()[0],
+    version=__version__,
     description='Classes to create strongly typed structures in Python',
     long_description=open(os.path.join(CONTAINING_DIRECTORY,'README.rst')).read(),
     url='https://gitlab.aldebaran.lan/sambrose/py_strong_typing',
@@ -29,7 +36,7 @@ setup(
     packages=package_list,
     install_requires=[
         # 'enum34;python_version<"3.4"', not recognized by old setuptools ?
-        "enum34 >= 1.0.4"
+        "enum34 >= 1.0.4",
     ],
     package_data={
         "strong_typing":["VERSION", "../README.rst"]
