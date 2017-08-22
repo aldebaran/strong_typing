@@ -14,6 +14,7 @@ def get_version_from_tag():
     # Finally, it adds -dirty if changes are not commited
     # e.g: 0.0.1-10-g48b85f5-dirty
 
+    git_description = git_description.decode(encoding="ascii")
     git_description = git_description.split('\n')[0].split("-")
     version = git_description[0]
     if len(git_description) >= 3:
