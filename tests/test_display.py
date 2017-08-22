@@ -7,9 +7,11 @@ import sys
 import enum
 import pytest
 try:
-	import python_qt_binding
+	from Qt import QtCore
 	qt_available = True
-except:
+	from strong_typing import ObjectDisplayWidget
+except ImportError as e:
+	print(e)
 	qt_available = False
 
 # Local modules
@@ -49,16 +51,14 @@ class SpecialTestStruct(Struct):
 		StructParameter(type=InnerTestStruct, name="struct_with_default", default=InnerTestStruct(5, 20.0)),
 	]
 
-if qt_available:
-	from strong_typing import ObjectDisplayWidget
-
-	def test_display(qtbot):
-		instance = SpecialTestStruct()
-		widget = ObjectDisplayWidget()
-		widget.data = instance
-		qtbot.addWidget(widget)
-		widget.show()
-		qtbot.waitForWindowShown(widget)
+@pytest.mark.gui
+def test_display(qtbot):
+	instance = SpecialTestStruct()
+	widget = ObjectDisplayWidget()
+	widget.data = instance
+	qtbot.addWidget(widget)
+	widget.show()
+	qtbot.waitForWindowShown(widget)
 
 def test_textualize():
 	instance = SpecialTestStruct()

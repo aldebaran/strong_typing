@@ -37,7 +37,7 @@ setup(
     install_requires=[
         # 'enum34;python_version<"3.4"', not recognized by old setuptools ?
         "enum34 >= 1.0.4",
-        "python_qt_binding >= 0.2"
+        "Qt.py >= 1.0.0"
     ],
     package_data={
         "strong_typing":["VERSION", "../README.rst"]

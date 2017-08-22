@@ -7,7 +7,7 @@ import sys
 import enum
 import collections
 try:
-	from python_qt_binding import QtGui, QtCore
+	from Qt import QtGui, QtCore, QtWidgets
 	_qt_available = True
 except ImportError:
 	_qt_available = False
@@ -24,7 +24,7 @@ if sys.version_info >= (3,0):
     long = int
 
 if _qt_available:
-	class ObjectDisplayWidget(QtGui.QTreeWidget):
+	class ObjectDisplayWidget(QtWidgets.QTreeWidget):
 		"""
 		Tree widget displaying an object and giving the possibility to
 		modify it.
@@ -42,7 +42,7 @@ if _qt_available:
 			super(ObjectDisplayWidget, self).__init__(parent)
 
 			# Take as much space as possible
-			self.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+			self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
 			# Three columns (key, value, delete button)
 			self.setColumnCount(3)
@@ -147,7 +147,7 @@ if _qt_available:
 
 			## Create item
 			if key != '':
-				item = QtGui.QTreeWidgetItem()
+				item = QtWidgets.QTreeWidgetItem()
 
 				if parent_item is None:
 					# This obj is a child of the root object
@@ -167,7 +167,7 @@ if _qt_available:
 					if isinstance(obj, enum.Enum):
 						# Enum is a limited set of choice
 						# Display a ComboBox
-						inputWidget = QtGui.QComboBox(self)
+						inputWidget = QtWidgets.QComboBox(self)
 						for element in list(type(obj)):
 							inputWidget.addItem(element.name)
 							if element.name == value:
@@ -179,15 +179,15 @@ if _qt_available:
 					else:
 						# Other types are manually editable
 						# Display a LineEdit
-						inputWidget = QtGui.QLineEdit(self)
+						inputWidget = QtWidgets.QLineEdit(self)
 						inputWidget.setText(value)
 						inputWidget.editingFinished.connect(lambda: self._refreshTextItem(parent_obj, item, key))
 						## TODO ?? Use a QValidator to prevent Exceptions ?
 
 				elif isinstance(obj, TypedList):
 					# obj is a list, add a button to add elements
-					inputWidget = QtGui.QPushButton(self)
-					inputWidget.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+					inputWidget = QtWidgets.QPushButton(self)
+					inputWidget.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
 					inputWidget.setText("Add element")
 					inputWidget.clicked.connect(lambda: self._elementAdditionRequired(item, obj))
 
@@ -206,8 +206,8 @@ if _qt_available:
 				# Third column
 				if isinstance(parent_obj, TypedList):
 					# obj is an element of a container that supports removal
-					inputWidget = QtGui.QPushButton(self)
-					inputWidget.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+					inputWidget = QtWidgets.QPushButton(self)
+					inputWidget.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
 					inputWidget.setText("Remove element")
 					inputWidget.clicked.connect(lambda: self._elementDeletionRequired(parent_item, parent_obj, item, key))
 					self.setItemWidget(item, 2, inputWidget)
