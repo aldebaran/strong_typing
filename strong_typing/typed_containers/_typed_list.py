@@ -51,7 +51,7 @@ class TypedList(list, TextualizeMixin):
                 return self.__typename(**element)
             else:
                 return self.__typename(element)
-        except Exception, e:
+        except Exception as e:
             msg = "TypedList: list elements are expected to be %s. %s received"
             msg = msg%(self.__typename, type(element))
             raise TypeError(msg)

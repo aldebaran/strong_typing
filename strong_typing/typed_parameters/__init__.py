@@ -4,7 +4,7 @@
 Contains all parameters' types that can be defined in a Struct
 """
 
-from _parameters import *
-import normalizers
+from ._parameters import *
+from . import normalizers
 
 #––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––#

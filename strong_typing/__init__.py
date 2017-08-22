@@ -12,12 +12,12 @@ def load_version():
 __doc__ = load_doc()
 __VERSION__ = load_version()
 
-import typed_parameters
-import typed_containers
+from . import typed_parameters
+from . import typed_containers
 
-from _struct import *
-from _versioned_struct import *
-from _display_widget import *
+from ._struct import *
+from ._versioned_struct import *
+from ._display_widget import *
 
 # Remove symbols that must not be exported
 del load_doc

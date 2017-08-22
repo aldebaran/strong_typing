@@ -3,7 +3,8 @@
 # Standard library
 from distutils.version import StrictVersion
 
-from _struct import StructMeta, Struct
+# Local modules
+from ._struct import StructMeta, Struct
 
 class VersionedStructMeta(StructMeta):
 

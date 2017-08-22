@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+# Standard libraries
+import sys
+
 # Third-party libraries
 import enum
 import pytest
@@ -59,5 +62,6 @@ if qt_available:
 
 def test_textualize():
 	instance = SpecialTestStruct()
-	print str(instance)
-	print unicode(instance)
+	print(str(instance))
+	if sys.version_info < (3, 0):
+		print(unicode(instance))

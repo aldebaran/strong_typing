@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+# Standard libraries
+import sys
+
 # Third-party libraries
 import enum
 import collections
@@ -9,9 +12,16 @@ try:
 except ImportError:
 	_qt_available = False
 
-# strong_typing
-from _struct import Struct
-from typed_containers import TypedList
+# Local modules
+from ._struct import Struct
+from .typed_containers import TypedList
+
+# Check for Python version
+
+if sys.version_info >= (3,0):
+    unicode = str
+    basestring = (str,bytes)
+    long = int
 
 if _qt_available:
 	class ObjectDisplayWidget(QtGui.QTreeWidget):
@@ -133,7 +143,7 @@ if _qt_available:
 					# value
 					value = ""
 				else:
-					print "Warning, unsupported type %s"%type(obj)
+					print("Warning, unsupported type %s"%type(obj))
 
 			## Create item
 			if key != '':

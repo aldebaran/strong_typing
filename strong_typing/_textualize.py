@@ -6,28 +6,34 @@ import collections
 # ─────────────────────
 # Formatting parameters
 
-INDENT_SIZE = 3
-AFTER_MID_INDENT=lambda x: (u'│' if x is unicode else '|') + ' ' * (INDENT_SIZE-1)
-AFTER_LAST_INDENT=lambda x: ' ' * (INDENT_SIZE)
-TREE_INDENT=lambda x: (u'─' if x is unicode else '-')*(INDENT_SIZE-2) + " "
-TREE_MID_INDENT=lambda x: (u'├' if x is unicode else '|') + TREE_INDENT(x)
-TREE_LAST_INDENT=lambda x: (u'└' if x is unicode else '|') + TREE_INDENT(x)
+def unicodeWithAsciiFallback(unicode_char, ascii_char, encoder=str):
+	try:
+		return encoder(unicode_char)
+	except UnicodeEncodeError:
+		return ascii_char
 
-def textualize_mapping(mapping, display_type=unicode):
+INDENT_SIZE = 3
+AFTER_MID_INDENT= lambda x: unicodeWithAsciiFallback(u'│', '|', x) + ' ' * (INDENT_SIZE-1)
+AFTER_LAST_INDENT=lambda x: ' ' * (INDENT_SIZE)
+TREE_INDENT=lambda x: unicodeWithAsciiFallback(u'─', '-', x)*(INDENT_SIZE-2) + " "
+TREE_MID_INDENT=lambda x: unicodeWithAsciiFallback(u'├', '|', x) + TREE_INDENT(x)
+TREE_LAST_INDENT=lambda x: unicodeWithAsciiFallback(u'└', '|', x) + TREE_INDENT(x)
+
+def textualize_mapping(mapping, display_type=str):
 	"""
 	Pretty print of mappings
 
 	:param mapping: Mapping to display
-	:param display_type: Output type (str or unicode, unicode is default)
+	:param display_type: Output type ("str" or "unicode", "str" is default)
 	"""
-	return textualize(mapping.keys(), mapping, display_type)
+	return textualize(list(mapping.keys()), mapping, display_type)
 
-def textualize_sequence(sequence, display_type=unicode):
+def textualize_sequence(sequence, display_type=str):
 	"""
 	Pretty print of sequence
 
 	:param sequence: Sequence to display
-	:param display_type: Output type (str or unicode, unicode is default)
+	:param display_type: Output type ("str" or "unicode", "str" is default)
 	"""
 	return textualize(range(len(sequence)), sequence, display_type)
 

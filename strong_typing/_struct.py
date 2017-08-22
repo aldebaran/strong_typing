@@ -3,9 +3,10 @@
 # Standard libraries
 import collections
 from abc import ABCMeta
+import sys
 
-# strong_typing
-from _textualize import TextualizeMixin
+# Local modules
+from ._textualize import TextualizeMixin
 
 class StructMeta(ABCMeta):
 
@@ -14,7 +15,7 @@ class StructMeta(ABCMeta):
 		attrs["__slots__"]=[]
 
 		# If some parameters are defined
-		if attrs.has_key("__ATTRIBUTES__"):
+		if "__ATTRIBUTES__" in attrs.keys():
 			for parameter in attrs["__ATTRIBUTES__"]:
 
 				# Create a slot for each
@@ -64,7 +65,7 @@ class StructMeta(ABCMeta):
 			docu += "\t``%s``\n\n"%parameter.id
 			docu += "\t\t%s\n\n"%parameter.description
 			default_string = "``" if not isinstance(parameter.default, Struct) else ":class:`"+type(parameter.default).__name__+"`"
-			default_string += unicode(parameter.default).replace("\n","\n\n\t\t\t") if parameter.default != "" else "\"\""
+			default_string += str(parameter.default).replace("\n","\n\n\t\t\t") if parameter.default != "" else "\"\""
 			default_string += "``" if not isinstance(parameter.default, Struct) else ""
 			docu += "\t\tDefault: %s\n\n"%default_string
 
@@ -78,7 +79,7 @@ class StructMeta(ABCMeta):
 		return type.__call__(cls, *args, **kwargs)
 
 class Struct(collections.Mapping, TextualizeMixin):
-	__metaclass__= StructMeta
+	__metaclass__=StructMeta
 	__ATTRIBUTES__ = []
 	__DESCRIPTION__ = ""
 
@@ -91,10 +92,10 @@ class Struct(collections.Mapping, TextualizeMixin):
 				msg += "no " if len(self.__ATTRIBUTES__)==0 else "at most %d "%len(self.__ATTRIBUTES__)
 				msg += "arguments (%d given)"%len(args)
 				raise TypeError(msg)
-		for key, value in kwargs.iteritems():
+		for key, value in kwargs.items():
 			try:
 				setattr(self, key, value)
-			except AttributeError, e:
+			except AttributeError as e:
 				msg = "__init__() got an unexpected keyword argument '%s'"%key
 				raise TypeError(msg)
 
@@ -102,7 +103,8 @@ class Struct(collections.Mapping, TextualizeMixin):
 		return getattr(self, key)
 
 	def __setattr__(self, name, value):
-		if (not name in self.keys()) and (not name[1:] in self.keys()):
+		keys = list(self.keys())
+		if (not name in keys) and (not name[1:] in keys):
 			raise AttributeError("%s object has no attribute %s"%(self.__class__.__name__, name))
 		object.__setattr__(self, name, value)
 
@@ -129,5 +131,8 @@ class Struct(collections.Mapping, TextualizeMixin):
 
 	def __ne__(self, other):
 		return not self.__eq__(other)
+
+if sys.version_info >= (3,0):
+	from ._struct_v3 import Struct
 
 __all__=["Struct"]

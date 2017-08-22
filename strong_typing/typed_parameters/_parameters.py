@@ -178,11 +178,12 @@ class EnumParameter(ParameterType):
 
 	def __init__(self, choices, name="", description="", default=None, id = None):
 		if isinstance(choices, list):
+			_choices = enum._EnumDict()
+			for i in range(len(choices)):
+				_choices[choices[i]] = i
 			choices=enum.EnumMeta("_local_enum_from_list_",
 				                  (EnumParameter.EnumFromList,),
-				                  dict(
-				                    [[choices[i], i] for i in range(len(choices))]
-				                  )
+				                  _choices,
 				                 )
 		elif not isinstance(choices, type) or not issubclass(choices, enum.Enum):
 			# If choices is not a class and not an enum

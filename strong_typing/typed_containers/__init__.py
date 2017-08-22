@@ -4,4 +4,4 @@
 Overrides the built-in containers to constrain contained element types
 """
 
-from _typed_list import TypedList
+from ._typed_list import TypedList
