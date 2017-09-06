@@ -24,7 +24,7 @@ setup(
     author_email='sambrose@softbankrobotics.com',
     license='MIT',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: MIT License',
         'Intended Audience :: Developers',
         'Programming Language :: Python :: 2.7',
@@ -40,6 +40,6 @@ setup(
         "Qt.py >= 1.0.0"
     ],
     package_data={
-        "strong_typing":["VERSION", "../README.rst"]
+        "strong_typing":["VERSION"]
     }
 )
