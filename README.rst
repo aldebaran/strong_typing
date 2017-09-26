@@ -45,9 +45,4 @@ In the end, your class could look like this:
 Want to know more ?
 -------------------
 
-Find the complete documentation `here <http://doc.aldebaran.lan/doc/master/strong_typing/howtouse.html>`_.
-
-You can also download the code from `here <https://gitlab.aldebaran.lan/sambrose/py_strong_typing.git>`_
-or install the latest release with:
-
-	``pip install strong_typing --find-links=http://10.0.2.107/pypi --extra-index-url http://10.0.2.107/pypi --trusted-host 10.0.2.107``
+Find the complete documentation `here <https://aldebaran.github.io/strong_typing/howtouse.html>`_.
