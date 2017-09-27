@@ -1,4 +1,4 @@
 Description
 ===========
 
-.. include:: ../README.rst
+.. automodule:: strong_typing
