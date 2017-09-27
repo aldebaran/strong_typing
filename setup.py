@@ -22,10 +22,10 @@ setup(
     url='https://gitlab.aldebaran.lan/sambrose/py_strong_typing',
     author='Surya Ambrose',
     author_email='sambrose@softbankrobotics.com',
-    license='MIT',
+    license='BSD-3',
     classifiers=[
         'Development Status :: 3 - Alpha',
-        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: BSD License',
         'Intended Audience :: Developers',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.4',
